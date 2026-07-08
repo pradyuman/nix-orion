@@ -1,0 +1,9 @@
+{
+  "darwin": {
+    "aarch64": {
+      "version": "149",
+      "url": "https://cdn.kagi.com/updates/26_0/149.zip",
+      "hash": "sha256-C0mtGNE9Or0alFe2Gu4LkRcHMvk1RLXZ/mUo/XtWB2g="
+    }
+  }
+}
