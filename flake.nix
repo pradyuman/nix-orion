@@ -7,20 +7,19 @@
     { nixpkgs, ... }:
     let
       system = "aarch64-darwin";
+      overlay = import ./overlay.nix;
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-      };
-
-      sources = builtins.fromJSON (builtins.readFile ./sources.json);
-      orion-browser = pkgs.callPackage ./package.nix {
-        source = sources.darwin.aarch64;
+        overlays = [ overlay ];
       };
     in
     {
       packages.${system} = {
-        inherit orion-browser;
-        default = orion-browser;
+        inherit (pkgs) orion-browser;
+        default = pkgs.orion-browser;
       };
+
+      overlays.default = overlay;
     };
 }

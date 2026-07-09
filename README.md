@@ -2,7 +2,7 @@
 
 Nix flake for the [Orion browser](https://orionbrowser.com) by [Kagi](https://help.kagi.com/kagi/company).
 
-### Usage
+## Configuration
 
 Add the flake input (macOS-only for now):
 
@@ -10,7 +10,9 @@ Add the flake input (macOS-only for now):
 inputs.nix-orion.url = "github:pradyuman/nix-orion";
 ```
 
-Then add Orion to your packages:
+Then use the package with one of the options outlined below.
+
+### Use the package directly
 
 ```nix
 # nix-darwin
@@ -24,7 +26,52 @@ home.packages = [
 ];
 ```
 
-Afterwards, you can launch the browser from `Applications` or from your terminal:
+### Use the overlay
+
+Add the overlay in your `flake.nix`:
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-orion.url = "github:pradyuman/nix-orion";
+  };
+
+  outputs =
+    inputs@{ nix-darwin, ... }:
+    {
+      darwinConfigurations.hostname = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        specialArgs = { inherit inputs; };
+
+        modules = [
+          {
+            nixpkgs.overlays = [ inputs.nix-orion.overlays.default ];
+          }
+        ];
+      };
+    };
+}
+```
+
+Then use `pkgs.orion-browser`:
+
+```nix
+# nix-darwin
+environment.systemPackages = [
+  pkgs.orion-browser
+];
+
+# Home Manager
+home.packages = [
+  pkgs.orion-browser
+];
+```
+
+## Usage
+
+Once configured, you can launch the browser from `Applications` or from your terminal:
 
 ```sh
 # This will launch the Orion browser.
