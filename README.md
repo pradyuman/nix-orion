@@ -12,6 +12,39 @@ inputs.nix-orion.url = "github:pradyuman/nix-orion";
 
 Then use the package with one of the options outlined below.
 
+### Use the Home Manager module
+
+```nix
+{
+  imports = [
+    inputs.nix-orion.homeModules.default
+  ];
+
+  # This makes pkgs.orion-browser available to the module.
+  nixpkgs.overlays = [
+    inputs.nix-orion.overlays.default
+  ];
+
+  programs.orion = {
+    enable = true;
+
+    settings = {
+      ShowTitlesInTabs = true;
+      TabStyle = "treeStyle";
+      CustomAppIcon = "appicon3";
+      NSUserKeyEquivalents = {
+        "Show Sidebar" = "@s";
+        "Hide Sidebar" = "@s";
+
+        # Save Page holds cmd-s by default.
+        # It must move for the sidebar binding to work.
+        "Save Page…" = "@^s";
+      };
+    };
+  };
+}
+```
+
 ### Use the package directly
 
 ```nix

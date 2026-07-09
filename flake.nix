@@ -21,5 +21,7 @@
       };
 
       overlays.default = overlay;
+
+      homeModules.default = ./modules/home-manager.nix;
     };
 }
