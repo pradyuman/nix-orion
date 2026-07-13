@@ -42,6 +42,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   meta = {
     description = "WebKit-based web browser by Kagi";
     homepage = "https://orionbrowser.com/";
+    changelog = "https://orionbrowser.com/updates/orion-release-notes";
     license = lib.licenses.unfree;
     mainProgram = "orion";
     platforms = [ "aarch64-darwin" ];

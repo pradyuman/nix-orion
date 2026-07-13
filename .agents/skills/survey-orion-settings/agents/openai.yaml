@@ -1,0 +1,7 @@
+interface:
+  display_name: "Survey Orion Settings"
+  short_description: "Survey selected Orion release and update its Nix settings catalog"
+  default_prompt: "Use $survey-orion-settings to survey the Orion release selected by sources.json, update this repository's settings catalog and source documentation, validate the changes, and leave them unstaged for review."
+
+policy:
+  allow_implicit_invocation: false
