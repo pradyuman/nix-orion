@@ -1,0 +1,71 @@
+name: Update Orion
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-orion
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check for updates
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      update-available: ${{ steps.update.outputs.update-available }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
+
+      - name: Check Kagi for an update
+        id: update
+        run: |
+          ./scripts/update.sh
+
+          if ! git diff --quiet -- sources.json; then
+            echo "update-available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  update:
+    name: Validate and commit update
+    needs: check
+    if: needs.check.outputs.update-available == 'true'
+    runs-on: macos-15
+    timeout-minutes: 10
+    permissions:
+      contents: write # Commit the source update after validation.
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
+
+      - name: Update source
+        run: ./scripts/update.sh
+
+      - name: Build and verify Kagi release
+        run: ./scripts/verify.sh
+
+      - name: Check changes
+        run: git diff --check
+
+      - name: Commit update
+        run: |
+          version="$(plutil -extract darwin.aarch64.version raw -o - sources.json)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sources.json
+          git commit -m "update orion to $version"
+          git push origin "HEAD:$GITHUB_REF_NAME"

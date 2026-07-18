@@ -1,5 +1,5 @@
 #!/usr/bin/env nix
-#!nix shell --inputs-from . nixpkgs#bash nixpkgs#curl nixpkgs#jq nixpkgs#libplist nixpkgs#_7zz nixpkgs#moreutils -c bash
+#!nix shell --inputs-from .. nixpkgs#bash nixpkgs#curl nixpkgs#jq nixpkgs#libplist nixpkgs#_7zz nixpkgs#moreutils -c bash
 
 set -euo pipefail
 
@@ -18,7 +18,7 @@ version="$(
 )"
 
 if [[ -z "$version" ]]; then
-  echo "[update] Failed to read Orion version from Info.plist" >&2
+  echo "Failed to read Orion version from Info.plist" >&2
   exit 1
 fi
 
@@ -34,6 +34,6 @@ jq \
   '.darwin.aarch64 = { version: $version, url: $url, hash: $hash }' \
   "$sources_json" | sponge "$sources_json"
 
-echo "[update] Orion $version"
-echo "[update] $url"
-echo "[update] $hash"
+echo "Orion $version"
+echo "$url"
+echo "$hash"
