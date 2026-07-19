@@ -12,7 +12,7 @@ let
   catalog = import ./catalog { inherit lib; };
   catalogDefaults = lib.mapAttrs (_: setting: setting.default) catalog.settings;
 
-  # A null catalog default means the preference should be absent by default.
+  # A null catalog default means the setting should be absent by default.
   defaultKeysToUnset = lib.attrNames (lib.filterAttrs (_: value: value == null) catalogDefaults);
 
   # Non-null catalog defaults will be merged in with user settings
@@ -35,7 +35,7 @@ in
       lib.mkIf (cfg.resetUnconfiguredSettings && defaultKeysToUnset != [ ])
         (
           lib.hm.dag.entryBetween [ "setDarwinDefaults" ] [ "writeBoundary" ] ''
-            verboseEcho "Removing Orion preferences that are unset by default"
+            verboseEcho "Removing Orion settings that are unset by default"
 
             for name in ${lib.escapeShellArgs defaultKeysToUnset}; do
               if /usr/bin/defaults read ${lib.escapeShellArg orionDomain} "$name" >/dev/null 2>&1; then

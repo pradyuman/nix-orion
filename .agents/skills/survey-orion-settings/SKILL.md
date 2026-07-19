@@ -12,9 +12,9 @@ settings catalog.
 
 - Work from the repository root and preserve unrelated user changes.
 - Use `sources.json` to identify the target build,
-  `modules/home-manager/settings/catalog/settings.nix` as the previous catalog, static
-  analysis for candidate keys and initializer behavior, and runtime UI and
-  plist checks for persistence and UI mappings.
+  `modules/home-manager/settings/catalog/settings.nix` as the previous catalog,
+  static analysis for candidate keys and initializer behavior, and runtime UI
+  and plist checks for persistence and UI mappings.
 - Survey the build already selected by `sources.json`. Do not run
   `scripts/update.sh` or modify package metadata.
 - Reset only Orion's preference domain for the clean survey baseline. Never
@@ -46,7 +46,7 @@ settings catalog.
    version in `sources.json`.
 
 5. Quit Orion, run `defaults delete com.kagi.kagimacOS`, and launch the
-   package-built app retained above. Confirm that previous preference overrides
+   package-built app retained above. Confirm that previous setting overrides
    are absent before changing any controls.
 
 ## 2. Perform static analysis
@@ -62,17 +62,17 @@ nix develop .#survey --command rizin <binary>
 nix develop .#survey --command ghidra
 ```
 
-- Extract strings with `rz-bin -zz` and search for preference-looking keys,
+- Extract strings with `rz-bin -zz` and search for candidate setting keys,
   Settings labels, raw enum values, and `NSUserDefaults` accessors.
 - Use Rizin to locate candidate strings, methods, and xrefs. Use Ghidra to
   decompile relevant initializers and handlers when establishing defaults or
-  preference behavior.
+  setting behavior.
 - Search the current app's resources, localized strings, and compiled interface
   files for controls absent from or renamed since the existing survey.
 
 Evaluate findings conservatively:
 
-- Record an enum value only when the surrounding preference implementation or
+- Record an enum value only when the surrounding setting implementation or
   a controlled runtime diff ties it to the key.
 - Record a factory default only when initializer analysis or the clean runtime
   baseline establishes it unambiguously.
@@ -91,7 +91,7 @@ Use the package-built app retained above for runtime checks.
 
 For every Settings tab:
 
-1. Map each visible preference control to its persisted key. Report controls
+1. Map each visible setting control to its persisted key. Report controls
    that do not produce durable plist state or whose key cannot be established.
 
 2. For a control whose persisted key is unknown, export a baseline:
@@ -107,20 +107,71 @@ For every Settings tab:
 4. Restore the visible value immediately and verify it in both the UI and a
    fresh plist export.
 
-Use `defaults export ... | plutil -p -` for inspection. Do not force the plist
-through JSON because persisted values may contain non-JSON plist objects.
+Use `defaults export com.kagi.kagimacOS - | plutil -p -` for inspection. Do not
+force the plist through JSON because persisted values may contain non-JSON
+plist objects.
 
-## 4. Update the artifacts
+## 4. Survey the toolbar editor
+
+Survey toolbar customization separately because it is not part of the Settings
+UI. Orion has three tab styles but stores only two toolbar layouts. Inspect each
+tab style: Standard and Vertical share one set of keys, while Compact uses
+another:
+
+- Standard/Vertical uses `ToolbarConfiguration`. AppKit mirrors the layout in
+  `NSToolbar Configuration BrowserToolbar`, while `overflowMenuItems` stores
+  the overflow order.
+- Compact uses `ToolbarConfigurationForCompactTabs`. AppKit mirrors the layout
+  in `NSToolbar Configuration BrowserCompactTabToolbar`, while
+  `overflowMenuItemsForCompactTabs` stores the overflow order.
+
+`TB Item Identifiers` records the toolbar's current item order. Treat
+`TB Default Item Identifiers` as Orion-managed state and exclude it from the
+catalog.
+For each tab style, record the starting item order and restore it after every
+test:
+
+1. Inventory every visible palette item and its label in each tab style with
+   Computer Use accessibility output and screenshots. Use the `Insert at
+   beginning of toolbar` and `Insert at end of toolbar` secondary actions when
+   available. Drag items only when the editor does not expose a usable
+   accessibility action.
+
+2. Map each palette label to its persisted identifier. Export the
+   `com.kagi.kagimacOS` preference domain, add one item, click Done, and export
+   the domain again. Diff the two exports, restore the recorded item order, and
+   repeat with the next item.
+
+3. Record each item's default placement, whether Orion allows duplicates, and
+   when the item is available. Change toolbar controls such as display mode,
+   mini-toolbar mode (`CurrentToolbarSize`), and overflow menu order one at a
+   time, and map any durable values they write.
+
+4. Test one extension toolbar button in an isolated Orion application support
+   directory. Install a known extension, add its button, and record the
+   identifier pattern. Quit Orion and restore the original application support
+   directory immediately after the test, including if the test fails.
+
+5. Verify each layout through `programs.orion.settings`. Start with only the
+   field being tested, relaunch Orion, and check both the visible order and the
+   persisted value. If Orion does not apply or preserve the layout, add other
+   observed fields one at a time to determine which are required.
+
+## 5. Update the artifacts
 
 Update `modules/home-manager/settings/catalog/settings.nix` with only supported
-findings. Update the top comment with the date this skill was last run:
+findings:
 
 - Use `default = <value>` for an established persisted factory default.
 - Use `default = null` when the clean baseline establishes that the key has no
   persisted value.
-- Use `values` only for established finite raw values.
 - Use an empty attribute set only for a known durable key whose default or
   allowed values are not established.
+- Use `values` only for established constraints. Set it to a list when the
+  setting itself accepts a finite set of raw values. For a list nested in a
+  setting attribute set, map its field name to a list schema instead. Put fixed
+  toolbar identifiers in `static` and regexes that match identifiers derived
+  from runtime data in `patterns`.
 
 Update `modules/home-manager/settings/catalog/survey.md` in place with:
 
@@ -132,15 +183,25 @@ Update `modules/home-manager/settings/catalog/survey.md` in place with:
 - A `Source` column that classifies each setting as `Static`, `Runtime`, or
   `Static + Runtime`
 - A compact table for cataloged settings without a visible Settings control
+- A toolbar table mapping each visible palette label to its persisted identifier
+  or identifier pattern, default position, repeatability, and any conditional
+  availability
+- A compact description of the user-configurable toolbar attribute set fields
 
-Keep the survey concise and focused on the current catalog. List each catalog
-key exactly once. Split grouped settings into separate rows when their defaults
-differ. Do not add separate source lists, a chronological work log,
-or screenshots. Keep only notes needed to interpret a control, raw value,
-grouped write, or intentional omission. Report unresolved findings and skipped
-checks in the final run summary instead of expanding the survey.
+Keep the survey concise and focused on the current catalog:
 
-## 5. Validate and review
+- List each user-configurable catalog key exactly once.
+- Document AppKit-generated toolbar keys such as
+  `NSToolbar Configuration BrowserToolbar` only in catalog comments, not in the
+  public survey, because users should not configure them.
+- Split grouped settings into separate rows when their defaults differ.
+- Do not add separate source lists, a chronological work log, or screenshots.
+- Keep only notes needed to interpret a control, raw value, grouped write, or
+  intentional omission.
+- Report unresolved findings and skipped checks in the final run summary rather
+  than expanding the survey.
+
+## 6. Validate and review
 
 Run focused validation:
 
@@ -163,7 +224,7 @@ git diff --check
 Review the complete diff for accidental plist data, personal paths, tokens,
 browsing data, and unrelated changes.
 
-## 6. Clean up and report
+## 7. Clean up and report
 
 Always perform this section, including when the survey stops early. Quit Orion,
 reset its preference domain, and remove the temporary working directory:

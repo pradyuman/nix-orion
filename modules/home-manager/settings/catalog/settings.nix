@@ -1,10 +1,64 @@
-# PreferenceValue :: null | Bool | Int | String | [ PreferenceValue ] | { String = PreferenceValue; }
-# Setting :: { default :: PreferenceValue; values? :: [ PreferenceValue ]; }
+# τ SettingValue = null | Bool | Int | String | [ SettingValue ] | { String = SettingValue; }
+# τ ListSchema = { static :: [ SettingValue ]; patterns? :: [ String ]; }
+# τ Setting = {
+#     default :: SettingValue;
+#     values? :: [ SettingValue ] | { String = ListSchema; };
+#   }
+
+# TODO: Add explicit types for settings and nested fields instead of using the
+# shape of `values` to distinguish fixed values from list schemas.
+
+let
+  toolbarItemSchema = {
+    static = [
+      "toggleSidebar"
+      "NSToolbarSidebarTrackingSeparatorItemIdentifier"
+      "windowSwitcher"
+      "navigationGroup"
+      "NSToolbarFlexibleSpaceItem"
+      "privacyButton"
+      "elementPicker"
+      "websiteSettingsButton"
+      "locationBar"
+      "bookmarkButton"
+      "addTabButton"
+      "downloadsButton"
+      "shareButton"
+      "tabOverview"
+      "overflow"
+      "homeButton"
+      "startPageButton"
+      "notesButton"
+      "addWindowButton"
+      "addPrivateWindowButton"
+      "historyButton"
+      "zoomButton"
+      "printButton"
+      "webInspectorButton"
+      "extensions"
+      "readerMode"
+      "focusMode"
+      "summarizePage"
+      "privacyPass"
+    ];
+
+    patterns = [
+      # Programmable Button identifiers contain a generated UUID.
+      "customAction-[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}"
+      # Extension toolbar button identifiers contain the extension ID.
+      "webExtButton-.+"
+    ];
+  };
+in
 {
   # General
   AppleLanguages.default = null;
   AskForEachDownload.default = false;
   DownloadLocation.default = null;
+  ExperimentalFeatures.default = {
+    "Prefer Page Rendering Updates near 120fps" = false;
+    "Prefer Page Rendering Updates near 60fps" = true;
+  };
   HomePageURL.default = "https://kagi.com/";
   KagiOpensWith = {
     default = "restoreLastSessionNonPrivate";
@@ -277,10 +331,28 @@
   AllowFirefoxWebExtensions.default = true;
   WebExtAutomaticUpdates.default = false;
 
-  # Raw dictionaries
-  ExperimentalFeatures.default = {
-    "Prefer Page Rendering Updates near 120fps" = false;
-    "Prefer Page Rendering Updates near 60fps" = true;
+  # Toolbar
+  ToolbarConfiguration = {
+    default = null;
+    values."TB Item Identifiers" = toolbarItemSchema;
   };
+  ToolbarConfigurationForCompactTabs = {
+    default = {
+      "TB Display Mode" = 2;
+      "TB Icon Size Mode" = 1;
+      "TB Is Shown" = true;
+      "TB Size Mode" = 1;
+    };
+    values."TB Item Identifiers" = toolbarItemSchema;
+  };
+  overflowMenuItems.default = null;
+  overflowMenuItemsForCompactTabs.default = null;
+
+  # Orion/AppKit may recreate these runtime mirrors. Users should not configure
+  # them; null lets the default reset behavior remove stale mirrors.
+  "NSToolbar Configuration BrowserToolbar".default = null;
+  "NSToolbar Configuration BrowserCompactTabToolbar".default = null;
+
+  # Keyboard shortcuts
   NSUserKeyEquivalents.default = null;
 }

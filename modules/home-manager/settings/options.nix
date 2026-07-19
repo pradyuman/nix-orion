@@ -30,7 +30,7 @@
           };
         }
       '';
-      description = "Orion preferences written to the com.kagi.kagimacOS defaults domain on Darwin.";
+      description = "Orion settings written to the com.kagi.kagimacOS defaults domain on Darwin.";
     };
   };
 }

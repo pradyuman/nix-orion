@@ -1,4 +1,4 @@
-# Catalog :: { settings :: { String = Setting; }; }
+# τ Catalog = { settings :: { String = Setting; }; }
 { lib }:
 
 let
