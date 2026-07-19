@@ -70,7 +70,7 @@ programs.orion.settings = {
 ```
 
 For more settings, see the
-[settings catalog](modules/home-manager/settings/catalog/settings.nix), which
+[settings catalog](modules/home-manager/settings/catalog/default.nix), which
 lists surveyed keys and defaults, and the
 [settings survey](modules/home-manager/settings/catalog/survey.md), which maps
 those keys to Orion's visible controls.
@@ -121,7 +121,7 @@ for Control. Menu-item names must match Orion's labels exactly.
 
 By default, nix-orion aims to make Orion settings deterministic. Removing an option from
 `programs.orion.settings` resets it to the default recorded in the
-[settings catalog](modules/home-manager/settings/catalog/settings.nix) instead
+[settings catalog](modules/home-manager/settings/catalog/default.nix) instead
 of leaving the previous value in Orion. If the catalog default is `null`, the
 setting key is removed.
 

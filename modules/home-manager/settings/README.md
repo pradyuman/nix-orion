@@ -2,7 +2,7 @@
 
 By default, nix-orion aims to make Orion settings deterministic. Removing an option from
 `programs.orion.settings` resets it to the default recorded in the
-[settings catalog](catalog/settings.nix) instead
+[settings catalog](catalog/default.nix) instead
 of leaving the previous value in Orion. If the catalog default is `null`, the
 setting key is removed.
 
@@ -17,7 +17,7 @@ programs.orion = {
 
 ## Catalog format
 
-Every setting entry in `catalog/settings.nix` needs a `default` value. A default of
+Every setting entry in `catalog/` needs a `default` value. A default of
 `null` means the setting key should be absent in the defaults domain.
 
 Entries with a known finite set of raw values also have a `values` list:

@@ -11,10 +11,10 @@ settings catalog.
 ## Guardrails
 
 - Work from the repository root and preserve unrelated user changes.
-- Use `sources.json` to identify the target build,
-  `modules/home-manager/settings/catalog/settings.nix` as the previous catalog,
-  static analysis for candidate keys and initializer behavior, and runtime UI
-  and plist checks for persistence and UI mappings.
+- Use `sources.json` to identify the target build, the files in
+  `modules/home-manager/settings/catalog` as the previous catalog, static
+  analysis for candidate keys and initializer behavior, and runtime UI and
+  plist checks for persistence and UI mappings.
 - Survey the build already selected by `sources.json`. Do not run
   `scripts/update.sh` or modify package metadata.
 - Reset only Orion's preference domain for the clean survey baseline. Never
@@ -25,8 +25,9 @@ settings catalog.
 
 ## 1. Prepare the survey
 
-1. Read `modules/home-manager/settings/catalog/settings.nix` and
-   `modules/home-manager/settings/catalog/survey.md` as the comparison baselines.
+1. Read every Nix file in `modules/home-manager/settings/catalog` and
+   `modules/home-manager/settings/catalog/survey.md` as the comparison
+   baselines.
 
 2. Create a clean temporary working directory. Use it for plist exports,
    extracted binaries, Ghidra projects, screenshots, and other analysis output:
@@ -132,10 +133,14 @@ For each tab style, record the starting item order and restore it after every
 test:
 
 1. Inventory every visible palette item and its label in each tab style with
-   Computer Use accessibility output and screenshots. Use the `Insert at
-   beginning of toolbar` and `Insert at end of toolbar` secondary actions when
-   available. Drag items only when the editor does not expose a usable
-   accessibility action.
+   Computer Use accessibility output and screenshots. Add items with either
+   available secondary action:
+
+   - `Insert at beginning of toolbar`
+   - `Insert at end of toolbar`
+
+   Drag items only when the editor does not expose a usable accessibility
+   action.
 
 2. Map each palette label to its persisted identifier. Export the
    `com.kagi.kagimacOS` preference domain, add one item, click Done, and export
@@ -159,14 +164,24 @@ test:
 
 ## 5. Update the artifacts
 
-Update `modules/home-manager/settings/catalog/settings.nix` with only supported
-findings:
+Update the appropriate Nix files in
+`modules/home-manager/settings/catalog` with only supported findings. Keep
+settings in the file matching their Settings tab, toolbar settings and schemas
+in `toolbar.nix`, and settings without a matching tab in `other.nix`:
+
+- Keep entries in each tab file in the same top-to-bottom order as Orion's UI.
+  Use each visible group label as a comment above its catalog entries, even
+  when the group contains only one key. Keep `other.nix` in the same order as
+  the survey's Other settings table.
 
 - Use `default = <value>` for an established persisted factory default.
+
 - Use `default = null` when the clean baseline establishes that the key has no
   persisted value.
+
 - Use an empty attribute set only for a known durable key whose default or
   allowed values are not established.
+
 - Use `values` only for established constraints. Set it to a list when the
   setting itself accepts a finite set of raw values. For a list nested in a
   setting attribute set, map its field name to a list schema instead. Put fixed
@@ -207,7 +222,7 @@ Run focused validation:
 
 ```sh
 nix fmt -- \
-  modules/home-manager/settings/catalog/settings.nix \
+  modules/home-manager/settings/catalog/*.nix \
   modules/home-manager/settings/catalog/survey.md
 nix eval --impure --expr '
   let
