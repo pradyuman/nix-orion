@@ -39,8 +39,13 @@
     ];
   };
   WindowBorderThickness = {
-    type = "int";
+    type = "enum";
     default = 0;
+    values = [
+      0 # Thin
+      1 # Medium
+      2 # Thick
+    ];
   };
   WindowBorderColorData = {
     type = "color";
@@ -48,8 +53,22 @@
     default = null;
   };
   WindowBorderGradientPreset = {
-    type = "int";
+    type = "enum";
     default = null;
+    values = [
+      0 # Orion Glow
+      1 # Orion Dark
+      2 # Flare
+      3 # Deep Space
+      4 # Horizon
+      5 # Mint
+      6 # Cosmic
+      7 # Ocean
+      8 # Rainbow
+      9 # Fire & Ice
+      10 # Silver
+      11 # Gold
+    ];
   };
   WindowBorderAnimated = {
     type = "bool";
@@ -60,8 +79,13 @@
     default = null;
   };
   WindowBorderAnimationSpeed = {
-    type = "int";
+    type = "enum";
     default = null;
+    values = [
+      0 # Off
+      50 # Slow
+      100 # Fast
+    ];
   };
   WindowBorderUseWebsiteThemeColor = {
     type = "bool";

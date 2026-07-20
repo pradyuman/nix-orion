@@ -108,6 +108,17 @@ For every Settings tab:
 4. Restore the visible value immediately and verify it in both the UI and a
    fresh plist export.
 
+For controls shown conditionally in a sheet or behind Orion+, preview state is
+not persistence evidence. Select the parent mode, click Done, and require a
+durable plist delta before recording the dependent values. Do not purchase,
+restore, or sign in to Orion+ automatically. Report the blocked checks when an
+active subscription is unavailable.
+
+Probe sliders for clamping and snap points rather than assuming they accept
+every value in their displayed range. When a slider persists a finite set of
+numeric values, catalog it as an `enum` with those values instead of as an
+`int`.
+
 Use `defaults export com.kagi.kagimacOS - | plutil -p -` for inspection. Do not
 force the plist through JSON because persisted values may contain non-JSON
 plist objects.
@@ -246,13 +257,17 @@ browsing data, and unrelated changes.
 
 ## 7. Clean up and report
 
-Always perform this section, including when the survey stops early. Quit Orion,
-reset its preference domain, and remove the temporary working directory:
+Always perform this section, including when the survey stops early. Quit Orion
+and wait for it to exit. Then reset its preference domain and remove the
+temporary working directory:
 
 ```sh
 defaults delete com.kagi.kagimacOS
 rm -rf /tmp/nix-orion-survey
 ```
+
+Before reporting, confirm that the preference plist is absent or empty and that
+the temporary working directory no longer exists.
 
 Report:
 
