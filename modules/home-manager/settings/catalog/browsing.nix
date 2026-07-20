@@ -1,36 +1,81 @@
 {
   # Check for SSL website
-  PreferHTTPS.default = true;
+  PreferHTTPS = {
+    type = "bool";
+    default = true;
+  };
 
   # URL display
-  ShowFullWebsiteAddress.default = true;
-  DisplayIDNDomains.default = false;
+  ShowFullWebsiteAddress = {
+    type = "bool";
+    default = true;
+  };
+  DisplayIDNDomains = {
+    type = "bool";
+    default = false;
+  };
 
   # Bookmarks
-  OpenBookmarksInNewTabs.default = false;
+  OpenBookmarksInNewTabs = {
+    type = "bool";
+    default = false;
+  };
 
   # Navigation
-  FavoritesShortcutEnabled.default = true;
+  FavoritesShortcutEnabled = {
+    type = "bool";
+    default = true;
+  };
 
   # Window switcher
-  WSSwitchWindowsInPlace.default = true;
+  WSSwitchWindowsInPlace = {
+    type = "bool";
+    default = true;
+  };
 
   # Link Preview
-  OpenLinkPreview.default = true;
+  OpenLinkPreview = {
+    type = "bool";
+    default = true;
+  };
 
   # Focus Mode
-  ShowFocusModeIndicator.default = true;
+  ShowFocusModeIndicator = {
+    type = "bool";
+    default = true;
+  };
 
   # Picture in Picture
-  confirmClosingTabsWhenInPiP.default = true;
+  confirmClosingTabsWhenInPiP = {
+    type = "bool";
+    default = true;
+  };
 
   # Spelling and Grammar
-  WebContinuousSpellCheckingEnabled.default = false;
-  WebAutomaticSpellingCorrectionEnabled.default = false;
+  WebContinuousSpellCheckingEnabled = {
+    type = "bool";
+    default = false;
+  };
+  WebAutomaticSpellingCorrectionEnabled = {
+    type = "bool";
+    default = false;
+  };
 
   # Accessibility
-  UseMinimumFontSize.default = false;
-  MinimumFontSize.default = 9;
-  TabFocusesLinks.default = false;
-  PreventESCFromExitingFullScreen.default = false;
+  UseMinimumFontSize = {
+    type = "bool";
+    default = false;
+  };
+  MinimumFontSize = {
+    type = "int";
+    default = 9;
+  };
+  TabFocusesLinks = {
+    type = "bool";
+    default = false;
+  };
+  PreventESCFromExitingFullScreen = {
+    type = "bool";
+    default = false;
+  };
 }

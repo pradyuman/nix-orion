@@ -1,8 +1,17 @@
 {
   # Rendering
-  JSONRenderer.default = true;
+  JSONRenderer = {
+    type = "bool";
+    default = true;
+  };
 
   # Extensions
-  AllowChromeWebExtensions.default = true;
-  AllowFirefoxWebExtensions.default = true;
+  AllowChromeWebExtensions = {
+    type = "bool";
+    default = true;
+  };
+  AllowFirefoxWebExtensions = {
+    type = "bool";
+    default = true;
+  };
 }

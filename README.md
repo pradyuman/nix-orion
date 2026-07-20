@@ -38,7 +38,7 @@ Nix flake for the [Orion browser](https://orionbrowser.com) by [Kagi](https://he
           # Add the Home Manager module
           nix-orion.homeModules.default
           
-          # Configure your settings (deterministic by default)
+          # Configure Orion
           {
             programs.orion = {
               enable = true;
@@ -71,8 +71,8 @@ programs.orion.settings = {
 
 For more settings, see the
 [settings catalog](modules/home-manager/settings/catalog/default.nix), which
-lists surveyed keys and defaults, and the
-[settings survey](modules/home-manager/settings/catalog/survey.md), which maps
+lists the setting keys and defaults known to nix-orion, and the
+[settings reference](modules/home-manager/settings/README.md), which maps
 those keys to Orion's visible controls.
 
 ### Toolbar configuration
@@ -80,7 +80,7 @@ those keys to Orion's visible controls.
 Orion stores the active toolbar order in `TB Item Identifiers`. For Standard
 and Vertical tabs, configure it under `ToolbarConfiguration`. For Compact tabs,
 use `ToolbarConfigurationForCompactTabs`. The
-[settings survey](modules/home-manager/settings/catalog/survey.md#toolbar-customization)
+[toolbar reference](modules/home-manager/settings/README.md#toolbar-customization)
 lists the available item identifiers.
 
 Example:
@@ -117,24 +117,26 @@ programs.orion.settings.NSUserKeyEquivalents = {
 Shortcut modifiers use `@` for Command, `$` for Shift, `~` for Option, and `^`
 for Control. Menu-item names must match Orion's labels exactly.
 
-### Determinism
+### Omitted settings
 
-By default, nix-orion aims to make Orion settings deterministic. Removing an option from
-`programs.orion.settings` resets it to the default recorded in the
-[settings catalog](modules/home-manager/settings/catalog/default.nix) instead
-of leaving the previous value in Orion. If the catalog default is `null`, the
-setting key is removed.
+By default, to keep Orion's configuration deterministic, nix-orion applies its
+recorded defaults to settings omitted from `programs.orion.settings`. The
+defaults are listed in the
+[settings catalog](modules/home-manager/settings/catalog/default.nix). If a
+catalog default is `null`, the setting key is removed.
 
-To leave unconfigured settings unchanged:
+To leave omitted settings unchanged:
 
 ```nix
 programs.orion = {
-  resetUnconfiguredSettings = false;
+  omittedSettings = "preserve";
   settings.ShowTitlesInTabs = true;
 };
 ```
 
-The [settings README](modules/home-manager/settings/README.md) documents how the
-catalog is maintained. If you notice anything missing from the catalog, please
-[file an issue](https://github.com/pradyuman/nix-orion/issues/new) or submit a
-pull request.
+### Catalog
+
+The [settings reference](modules/home-manager/settings/README.md) documents the
+catalog options and how they are maintained. If you notice anything missing,
+please [file an issue](https://github.com/pradyuman/nix-orion/issues/new) or
+submit a pull request. Contributions are welcome!

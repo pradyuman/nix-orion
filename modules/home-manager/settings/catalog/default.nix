@@ -1,13 +1,8 @@
-# τ SettingValue = null | Bool | Int | String | [ SettingValue ] | { String = SettingValue; }
-# τ ListSchema = { static :: [ SettingValue ]; patterns? :: [ String ]; }
-# τ Setting = {
-#     default :: SettingValue;
-#     values? :: [ SettingValue ] | { String = ListSchema; };
-#   }
-# τ Catalog = { settings :: { String = Setting; }; }
 { lib }:
 
 let
+  schema = import ./schema.nix { inherit lib; };
+
   settings = lib.mergeAttrsList (
     map import [
       ./advanced.nix
@@ -22,14 +17,7 @@ let
       ./toolbar.nix
     ]
   );
-  settingsWithoutDefaults = lib.attrNames (
-    lib.filterAttrs (_: setting: !(setting ? default)) settings
-  );
 in
-assert lib.assertMsg (settingsWithoutDefaults == [ ]) ''
-  Orion settings catalog entries must define a default:
-  ${lib.concatStringsSep ", " settingsWithoutDefaults}
-'';
 {
-  inherit settings;
+  settings = schema.validate settings;
 }

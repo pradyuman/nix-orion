@@ -1,5 +1,5 @@
 let
-  toolbarItemSchema = {
+  toolbarItemField = {
     static = [
       "toggleSidebar"
       "NSToolbarSidebarTrackingSeparatorItemIdentifier"
@@ -42,23 +42,37 @@ let
 in
 {
   ToolbarConfiguration = {
+    type = "attrs";
     default = null;
-    values."TB Item Identifiers" = toolbarItemSchema;
+    fields."TB Item Identifiers" = toolbarItemField;
   };
   ToolbarConfigurationForCompactTabs = {
+    type = "attrs";
     default = {
       "TB Display Mode" = 2;
       "TB Icon Size Mode" = 1;
       "TB Is Shown" = true;
       "TB Size Mode" = 1;
     };
-    values."TB Item Identifiers" = toolbarItemSchema;
+    fields."TB Item Identifiers" = toolbarItemField;
   };
-  overflowMenuItems.default = null;
-  overflowMenuItemsForCompactTabs.default = null;
+  overflowMenuItems = {
+    type = "list";
+    default = null;
+  };
+  overflowMenuItemsForCompactTabs = {
+    type = "list";
+    default = null;
+  };
 
   # Orion/AppKit may recreate these runtime mirrors. Users should not configure
   # them; null lets the default reset behavior remove stale mirrors.
-  "NSToolbar Configuration BrowserToolbar".default = null;
-  "NSToolbar Configuration BrowserCompactTabToolbar".default = null;
+  "NSToolbar Configuration BrowserToolbar" = {
+    type = "attrs";
+    default = null;
+  };
+  "NSToolbar Configuration BrowserCompactTabToolbar" = {
+    type = "attrs";
+    default = null;
+  };
 }

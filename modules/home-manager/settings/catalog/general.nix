@@ -1,6 +1,7 @@
 {
   # Orion opens with
   KagiOpensWith = {
+    type = "enum";
     default = "restoreLastSessionNonPrivate";
     values = [
       "newWindow"
@@ -12,6 +13,7 @@
 
   # New windows open with
   NewWindowOpensTo = {
+    type = "enum";
     default = "frequentlyVisitedSites";
     values = [
       "frequentlyVisitedSites"
@@ -24,6 +26,7 @@
 
   # New tabs open with
   NewTabOpensTo = {
+    type = "enum";
     default = "frequentlyVisitedSites";
     values = [
       "frequentlyVisitedSites"
@@ -35,14 +38,24 @@
   };
 
   # Homepage
-  HomePageURL.default = "https://kagi.com/";
+  HomePageURL = {
+    type = "string";
+    default = "https://kagi.com/";
+  };
 
   # File download location
-  DownloadLocation.default = null;
-  AskForEachDownload.default = false;
+  DownloadLocation = {
+    type = "string";
+    default = null;
+  };
+  AskForEachDownload = {
+    type = "bool";
+    default = false;
+  };
 
   # Remove download items
   RemoveDownloadItemsAfter = {
+    type = "enum";
     default = "manually";
     values = [
       "afterOneDay"
@@ -51,13 +64,20 @@
       "manually"
     ];
   };
-  OpenSafeFileAfterDownload.default = false;
+  OpenSafeFileAfterDownload = {
+    type = "bool";
+    default = false;
+  };
 
   # Language
-  AppleLanguages.default = null;
+  AppleLanguages = {
+    type = "list";
+    default = null;
+  };
 
   # Open external links in
   OpenExternalLinksInSetting = {
+    type = "enum";
     default = "lastActiveProfile";
     values = [
       "lastActiveProfile"
@@ -66,6 +86,12 @@
   };
 
   # Orion updates
-  SUEnableAutomaticChecks.default = true;
-  QuitWithConfirmation.default = true;
+  SUEnableAutomaticChecks = {
+    type = "bool";
+    default = true;
+  };
+  QuitWithConfirmation = {
+    type = "bool";
+    default = true;
+  };
 }

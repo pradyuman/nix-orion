@@ -1,16 +1,52 @@
 {
-  NotificationsEnabled.default = true;
-  StatusBarVisible.default = true;
-  ShowBackgroundImageOnStartPage.default = true;
-  ShowFavoritesOnStartPage.default = true;
-  ShowReadingListOnStartPage.default = true;
-  ShowRecommendationsOnStartPage.default = true;
-  ShowTopSitesOnStartPage.default = true;
-  PasswordSavingEnabled.default = true;
-  CookieNonPersist.default = false;
-  UseTouchIDForAutoFill.default = true;
-  WebExtAutomaticUpdates.default = false;
+  NotificationsEnabled = {
+    type = "bool";
+    default = true;
+  };
+  StatusBarVisible = {
+    type = "bool";
+    default = true;
+  };
+  ShowBackgroundImageOnStartPage = {
+    type = "bool";
+    default = true;
+  };
+  ShowFavoritesOnStartPage = {
+    type = "bool";
+    default = true;
+  };
+  ShowReadingListOnStartPage = {
+    type = "bool";
+    default = true;
+  };
+  ShowRecommendationsOnStartPage = {
+    type = "bool";
+    default = true;
+  };
+  ShowTopSitesOnStartPage = {
+    type = "bool";
+    default = true;
+  };
+  PasswordSavingEnabled = {
+    type = "bool";
+    default = true;
+  };
+  CookieNonPersist = {
+    type = "bool";
+    default = false;
+  };
+  UseTouchIDForAutoFill = {
+    type = "bool";
+    default = true;
+  };
+  WebExtAutomaticUpdates = {
+    type = "bool";
+    default = false;
+  };
 
   # Keyboard shortcuts
-  NSUserKeyEquivalents.default = null;
+  NSUserKeyEquivalents = {
+    type = "attrs";
+    default = null;
+  };
 }

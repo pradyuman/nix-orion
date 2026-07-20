@@ -1,6 +1,7 @@
 {
   # Remove trackers from URLs
   RemoveURLTrackersOption = {
+    type = "enum";
     default = "forPrivateBrowsingOnly";
     values = [
       "forPrivateBrowsingOnly"
@@ -10,6 +11,7 @@
 
   # Remove history items
   RemoveHistoryItemsAfter = {
+    type = "enum";
     default = "afterThreeMonths";
     values = [
       "afterOneDay"
@@ -26,6 +28,7 @@
 
   # Automatically delete cookies
   AutomaticallyDeleteCookiesAfter = {
+    type = "enum";
     default = "manually";
     values = [
       "afterOneDay"
@@ -41,10 +44,14 @@
   };
 
   # Cookies and website data
-  DisableHistory.default = false;
+  DisableHistory = {
+    type = "bool";
+    default = false;
+  };
 
   # Share crash reports
   SendCrashReports = {
+    type = "enum";
     default = "askBeforeSend";
     values = [
       "askBeforeSend"
@@ -54,8 +61,14 @@
   };
 
   # “Custom” user agent
-  CustomUserAgent.default = null;
+  CustomUserAgent = {
+    type = "string";
+    default = null;
+  };
 
   # Content blocker
-  ContentBlockerAutoUpdate.default = false;
+  ContentBlockerAutoUpdate = {
+    type = "bool";
+    default = false;
+  };
 }

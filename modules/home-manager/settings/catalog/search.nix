@@ -1,17 +1,47 @@
 {
   # Search engine
-  DefaultSearchEngine.default = "Kagi";
-  UseDefaultSearchEngineInPrivateMode.default = false;
-  ShowKagiPrivacyPass.default = false;
+  DefaultSearchEngine = {
+    type = "string";
+    default = "Kagi";
+  };
+  UseDefaultSearchEngineInPrivateMode = {
+    type = "bool";
+    default = false;
+  };
+  ShowKagiPrivacyPass = {
+    type = "bool";
+    default = false;
+  };
 
   # Private Browsing search engine
-  PrivateSearchEngine.default = "None";
+  PrivateSearchEngine = {
+    type = "string";
+    default = "None";
+  };
 
   # Autocomplete suggestions
-  TopHitsEnabled.default = true;
-  SearchSuggestEnabled.default = true;
-  AskKagiEnabled.default = true;
-  HistorySuggestionsEnabled.default = true;
-  BookmarksSuggestionsEnabled.default = true;
-  OpenTabsSuggestionsEnabled.default = true;
+  TopHitsEnabled = {
+    type = "bool";
+    default = true;
+  };
+  SearchSuggestEnabled = {
+    type = "bool";
+    default = true;
+  };
+  AskKagiEnabled = {
+    type = "bool";
+    default = true;
+  };
+  HistorySuggestionsEnabled = {
+    type = "bool";
+    default = true;
+  };
+  BookmarksSuggestionsEnabled = {
+    type = "bool";
+    default = true;
+  };
+  OpenTabsSuggestionsEnabled = {
+    type = "bool";
+    default = true;
+  };
 }

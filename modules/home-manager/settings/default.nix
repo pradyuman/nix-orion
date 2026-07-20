@@ -18,9 +18,11 @@ let
   # Non-null catalog defaults will be merged in with user settings
   defaultsToMerge = lib.filterAttrs (_: value: value != null) catalogDefaults;
 
+  shouldResetOmittedSettings = cfg.omittedSettings == "reset";
+
   # Merge user settings and catalog defaults.
   mergedSettings =
-    if cfg.resetUnconfiguredSettings then
+    if shouldResetOmittedSettings then
       lib.recursiveUpdate defaultsToMerge cfg.settings
     else
       cfg.settings;
@@ -32,7 +34,7 @@ in
     warnings = import ./warnings.nix { inherit cfg lib; };
 
     home.activation.unsetOrionDefaults =
-      lib.mkIf (cfg.resetUnconfiguredSettings && defaultKeysToUnset != [ ])
+      lib.mkIf (shouldResetOmittedSettings && defaultKeysToUnset != [ ])
         (
           lib.hm.dag.entryBetween [ "setDarwinDefaults" ] [ "writeBoundary" ] ''
             verboseEcho "Removing Orion settings that are unset by default"

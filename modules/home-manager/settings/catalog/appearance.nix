@@ -1,6 +1,7 @@
 {
   # Appearance
   AppearanceStyle = {
+    type = "enum";
     default = "system";
     values = [
       "system"
@@ -10,41 +11,97 @@
   };
 
   # Theme
-  CustomAccentColor.default = "#946FFF";
-  AllowWebsiteThemeColor.default = true;
-  UseCustomAccentColor.default = false;
+  CustomAccentColor = {
+    type = "string";
+    default = "#946FFF";
+  };
+  AllowWebsiteThemeColor = {
+    type = "bool";
+    default = true;
+  };
+  UseCustomAccentColor = {
+    type = "bool";
+    default = false;
+  };
 
   # Window Border (Orion+)
-  WindowBorderEnabled.default = false;
+  WindowBorderEnabled = {
+    type = "bool";
+    default = false;
+  };
   WindowBorderStyle = {
+    type = "enum";
     default = null;
     values = [
-      "solid"
-      "glass"
-      "gradient"
+      0 # Solid
+      1 # Glass
+      2 # Gradient
     ];
   };
-  WindowBorderThickness.default = 0;
-  WindowBorderColorData.default = null;
-  WindowBorderGradientPreset.default = null;
-  WindowBorderAnimated.default = null;
-  WindowBorderOpacity.default = null;
-  WindowBorderAnimationSpeed.default = null;
-  WindowBorderUseWebsiteThemeColor.default = null;
+  WindowBorderThickness = {
+    type = "int";
+    default = 0;
+  };
+  WindowBorderColorData = {
+    type = "data";
+    default = null;
+  };
+  WindowBorderGradientPreset = {
+    type = "int";
+    default = null;
+  };
+  WindowBorderAnimated = {
+    type = "bool";
+    default = null;
+  };
+  WindowBorderOpacity = {
+    type = "int";
+    default = null;
+  };
+  WindowBorderAnimationSpeed = {
+    type = "int";
+    default = null;
+  };
+  WindowBorderUseWebsiteThemeColor = {
+    type = "bool";
+    default = null;
+  };
 
   # Toolbar
-  AlwaysShowToolbarInFullScreen.default = true;
-  ShowProfileIndicatorInTabGroupSwitcher.default = true;
+  AlwaysShowToolbarInFullScreen = {
+    type = "bool";
+    default = true;
+  };
+  ShowProfileIndicatorInTabGroupSwitcher = {
+    type = "bool";
+    default = true;
+  };
 
   # Search bar
-  GroupStatusIndicatorsForCompactTabs.default = true;
-  GroupStatusIndicatorsForStandardTabs.default = true;
-  GroupStatusIndicatorsForVerticalTabs.default = true;
-  ShowRssFeedsButton.default = true;
-  DisplayWebAppIndicatorInLocationBar.default = true;
+  GroupStatusIndicatorsForCompactTabs = {
+    type = "bool";
+    default = true;
+  };
+  GroupStatusIndicatorsForStandardTabs = {
+    type = "bool";
+    default = true;
+  };
+  GroupStatusIndicatorsForVerticalTabs = {
+    type = "bool";
+    default = true;
+  };
+  ShowRssFeedsButton = {
+    type = "bool";
+    default = true;
+  };
+  DisplayWebAppIndicatorInLocationBar = {
+    type = "bool";
+    default = true;
+  };
 
   # Bookmarks bar
   BookmarksBarStyle = {
+    type = "enum";
     default = "iconAndText";
     values = [
       "iconAndText"
@@ -52,26 +109,51 @@
       "textOnly"
     ];
   };
-  BookmarksBarVisible.default = false;
+  BookmarksBarVisible = {
+    type = "bool";
+    default = false;
+  };
 
   # Sidebar
-  AutoShowSidebarInFullScreen.default = true;
+  AutoShowSidebarInFullScreen = {
+    type = "bool";
+    default = true;
+  };
 
   # Default font
-  DefaultFontFamily.default = "Times New Roman";
-  DefaultFontSize.default = 16;
-  DefaultMonospacedFont.default = "Courier";
-  DefaultMonospaceFontSize.default = 13;
+  DefaultFontFamily = {
+    type = "string";
+    default = "Times New Roman";
+  };
+  DefaultFontSize = {
+    type = "int";
+    default = 16;
+  };
+  DefaultMonospacedFont = {
+    type = "string";
+    default = "Courier";
+  };
+  DefaultMonospaceFontSize = {
+    type = "int";
+    default = 13;
+  };
 
   # Rendering
-  ExperimentalFeatures.default = {
-    "Prefer Page Rendering Updates near 120fps" = false;
-    "Prefer Page Rendering Updates near 60fps" = true;
+  ExperimentalFeatures = {
+    type = "attrs";
+    default = {
+      "Prefer Page Rendering Updates near 120fps" = false;
+      "Prefer Page Rendering Updates near 60fps" = true;
+    };
   };
-  DisableTransparencyForFullScreen.default = true;
+  DisableTransparencyForFullScreen = {
+    type = "bool";
+    default = true;
+  };
 
   # App icon
   CustomAppIcon = {
+    type = "enum";
     default = "";
     values = [
       ""

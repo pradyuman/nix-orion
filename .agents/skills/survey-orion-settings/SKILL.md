@@ -26,7 +26,7 @@ settings catalog.
 ## 1. Prepare the survey
 
 1. Read every Nix file in `modules/home-manager/settings/catalog` and
-   `modules/home-manager/settings/catalog/survey.md` as the comparison
+   `modules/home-manager/settings/README.md` as the comparison
    baselines.
 
 2. Create a clean temporary working directory. Use it for plist exports,
@@ -69,7 +69,7 @@ nix develop .#survey --command ghidra
   decompile relevant initializers and handlers when establishing defaults or
   setting behavior.
 - Search the current app's resources, localized strings, and compiled interface
-  files for controls absent from or renamed since the existing survey.
+  files for controls absent from or renamed since the existing reference.
 
 Evaluate findings conservatively:
 
@@ -172,23 +172,27 @@ in `toolbar.nix`, and settings without a matching tab in `other.nix`:
 - Keep entries in each tab file in the same top-to-bottom order as Orion's UI.
   Use each visible group label as a comment above its catalog entries, even
   when the group contains only one key. Keep `other.nix` in the same order as
-  the survey's Other settings table.
+  the reference's Other table.
+
+- Set `type` to `attrs`, `bool`, `data`, `enum`, `float`, `int`, `list`, or
+  `string`. Use `enum` with a non-empty `values` list when the setting accepts a
+  finite set of raw values. Use `data` for raw plist data even though
+  `programs.orion.settings` cannot write it.
 
 - Use `default = <value>` for an established persisted factory default.
 
 - Use `default = null` when the clean baseline establishes that the key has no
-  persisted value.
+  persisted value. This does not make the configured value nullable.
 
 - Use an empty attribute set only for a known durable key whose default or
   allowed values are not established.
 
-- Use `values` only for established constraints. Set it to a list when the
-  setting itself accepts a finite set of raw values. For a list nested in a
-  setting attribute set, map its field name to a list schema instead. Put fixed
-  toolbar identifiers in `static` and regexes that match identifiers derived
-  from runtime data in `patterns`.
+- Use `values` only for the accepted members of an `enum`. For a list nested in
+  a setting attribute set, map its field name to a `ListField` under `fields`.
+  Put fixed toolbar identifiers in `static` and regexes that match identifiers
+  derived from runtime data in `patterns`.
 
-Update `modules/home-manager/settings/catalog/survey.md` in place with:
+Update `modules/home-manager/settings/README.md` in place with:
 
 - A brief definition of the static and runtime sources
 - A UI-to-key table for every Settings tab
@@ -203,18 +207,18 @@ Update `modules/home-manager/settings/catalog/survey.md` in place with:
   availability
 - A compact description of the user-configurable toolbar attribute set fields
 
-Keep the survey concise and focused on the current catalog:
+Keep the reference concise and focused on the current catalog:
 
 - List each user-configurable catalog key exactly once.
 - Document AppKit-generated toolbar keys such as
   `NSToolbar Configuration BrowserToolbar` only in catalog comments, not in the
-  public survey, because users should not configure them.
+  public reference, because users should not configure them.
 - Split grouped settings into separate rows when their defaults differ.
 - Do not add separate source lists, a chronological work log, or screenshots.
 - Keep only notes needed to interpret a control, raw value, grouped write, or
   intentional omission.
 - Report unresolved findings and skipped checks in the final run summary rather
-  than expanding the survey.
+  than expanding the reference.
 
 ## 6. Validate and review
 
@@ -223,7 +227,7 @@ Run focused validation:
 ```sh
 nix fmt -- \
   modules/home-manager/settings/catalog/*.nix \
-  modules/home-manager/settings/catalog/survey.md
+  modules/home-manager/settings/README.md
 nix eval --impure --expr '
   let
     flake = builtins.getFlake (toString ./.);
