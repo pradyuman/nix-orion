@@ -21,11 +21,18 @@ let
     string = lib.types.str;
   };
 
+  # Accept the internal marker without exposing it in user-facing type errors.
   settingOrOmittedOptionType =
     type:
-    (lib.types.either (lib.types.enum [ omitted ]) type)
+    type
     // {
-      inherit (type) description;
+      check = value: value == omitted || type.check value;
+      merge =
+        location: definitions:
+        let
+          configuredDefinitions = lib.filter (definition: definition.value != omitted) definitions;
+        in
+        if configuredDefinitions == [ ] then omitted else type.merge location configuredDefinitions;
     };
 
   # Test whether an element is accepted by a list field.
