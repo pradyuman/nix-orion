@@ -19,5 +19,6 @@ let
   );
 in
 {
+  inherit schema;
   settings = schema.validate settings;
 }

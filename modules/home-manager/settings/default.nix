@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -26,6 +27,18 @@ let
       lib.recursiveUpdate defaultsToMerge cfg.settings
     else
       cfg.settings;
+
+  nsColorSettings = lib.filterAttrs (
+    name: _: lib.attrByPath [ name "encoding" ] null catalog.settings == "nsColor"
+  ) mergedSettings;
+
+  darwinDefaultsSettings = builtins.removeAttrs mergedSettings (lib.attrNames nsColorSettings);
+
+  writeNSColor =
+    pkgs.runCommandCC "nix-orion-write-nscolor" { nativeBuildInputs = [ pkgs.swift ]; }
+      ''
+        swiftc ${./write-nscolor.swift} -o $out
+      '';
 in
 {
   imports = [ ./options.nix ];
@@ -47,6 +60,27 @@ in
           ''
         );
 
-    targets.darwin.defaults.${orionDomain} = lib.mkIf (mergedSettings != { }) mergedSettings;
+    home.activation.writeOrionNSColors = lib.mkIf (nsColorSettings != { }) (
+      lib.hm.dag.entryAfter [ "setDarwinDefaults" ] ''
+        verboseEcho "Writing encoded Orion colors"
+
+        ${lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (
+            name: value:
+            "run ${writeNSColor} ${
+              lib.escapeShellArgs [
+                orionDomain
+                name
+                value
+              ]
+            }"
+          ) nsColorSettings
+        )}
+      ''
+    );
+
+    targets.darwin.defaults.${orionDomain} = lib.mkIf (
+      darwinDefaultsSettings != { }
+    ) darwinDefaultsSettings;
   };
 }

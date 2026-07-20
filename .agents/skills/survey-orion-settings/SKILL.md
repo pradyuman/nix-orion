@@ -174,10 +174,11 @@ in `toolbar.nix`, and settings without a matching tab in `other.nix`:
   when the group contains only one key. Keep `other.nix` in the same order as
   the reference's Other table.
 
-- Set `type` to `attrs`, `bool`, `data`, `enum`, `float`, `int`, `list`, or
-  `string`. Use `enum` with a non-empty `values` list when the setting accepts a
-  finite set of raw values. Use `data` for raw plist data even though
-  `programs.orion.settings` cannot write it.
+- Set `type` to `attrs`, `bool`, `color`, `enum`, `float`, `int`, `list`, or
+  `string`. Use `color` for a value configured in `#RRGGBB` format. Add
+  `encoding = "nsColor"` when Orion persists the color as archived `NSColor`
+  data, and omit it otherwise. Use `enum` with a non-empty `values` list when
+  the setting accepts a finite set of raw values.
 
 - Use `default = <value>` for an established persisted factory default.
 

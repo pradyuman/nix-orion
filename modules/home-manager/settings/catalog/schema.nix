@@ -1,7 +1,13 @@
 # τ SettingValue = null | Bool | Int | Float | String | [ SettingValue ] | { String = SettingValue; }
 # τ ScalarSetting = {
-#     type :: "bool" | "data" | "float" | "int" | "list" | "string";
+#     type :: "bool" | "float" | "int" | "list" | "string";
 #     default :: SettingValue;
+#   }
+#
+# τ ColorSetting = {
+#     type :: "color";
+#     default :: SettingValue;
+#     encoding? :: "nsColor";
 #   }
 #
 # τ EnumSetting = {
@@ -26,6 +32,7 @@
 #
 # τ Setting =
 #     ScalarSetting
+#   | ColorSetting
 #   | EnumSetting
 #   | AttrsSetting
 #
@@ -34,11 +41,12 @@
 { lib }:
 
 let
+  isColor = value: builtins.isString value && builtins.match "#[0-9A-Fa-f]{6}" value != null;
+
   typePredicates = {
     attrs = _: builtins.isAttrs;
     bool = _: builtins.isBool;
-    # Nix and Home Manager's plist generator cannot represent plist data.
-    data = _: _: false;
+    color = _: isColor;
     enum = setting: value: builtins.elem value setting.values;
     float = _: builtins.isFloat;
     int = _: builtins.isInt;
@@ -73,6 +81,11 @@ let
           )
         ) settings
       );
+      settingsWithInvalidEncodings = lib.attrNames (
+        lib.filterAttrs (
+          _: setting: setting ? encoding && !(setting.type == "color" && setting.encoding == "nsColor")
+        ) settings
+      );
       settingsWithInvalidDefaults = lib.attrNames (
         lib.filterAttrs (
           _: setting: setting.default != null && !(isValidValue setting setting.default)
@@ -95,6 +108,10 @@ let
       Orion settings catalog entries have constraints incompatible with their types:
       ${lib.concatStringsSep ", " settingsWithInvalidConstraints}
     '';
+    assert lib.assertMsg (settingsWithInvalidEncodings == [ ]) ''
+      Orion settings catalog entries have invalid encodings:
+      ${lib.concatStringsSep ", " settingsWithInvalidEncodings}
+    '';
     assert lib.assertMsg (settingsWithInvalidDefaults == [ ]) ''
       Orion settings catalog defaults do not match their declared types:
       ${lib.concatStringsSep ", " settingsWithInvalidDefaults}
@@ -102,5 +119,5 @@ let
     settings;
 in
 {
-  inherit validate;
+  inherit isColor validate;
 }

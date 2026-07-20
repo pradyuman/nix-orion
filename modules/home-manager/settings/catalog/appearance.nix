@@ -12,7 +12,7 @@
 
   # Theme
   CustomAccentColor = {
-    type = "string";
+    type = "color";
     default = "#946FFF";
   };
   AllowWebsiteThemeColor = {
@@ -43,7 +43,8 @@
     default = 0;
   };
   WindowBorderColorData = {
-    type = "data";
+    type = "color";
+    encoding = "nsColor";
     default = null;
   };
   WindowBorderGradientPreset = {

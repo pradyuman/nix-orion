@@ -12,8 +12,8 @@ let
   settingOptionTypes = {
     attrs = lib.types.attrs;
     bool = lib.types.bool;
-    data = (lib.types.addCheck lib.types.anything (_: false)) // {
-      description = "raw plist data, which Home Manager's plist generator cannot write";
+    color = (lib.types.addCheck lib.types.str catalog.schema.isColor) // {
+      description = "hex color in #RRGGBB format";
     };
     float = lib.types.float;
     int = lib.types.int;
