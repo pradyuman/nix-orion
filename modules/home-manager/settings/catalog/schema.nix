@@ -1,7 +1,13 @@
 # τ SettingValue = null | Bool | Int | Float | String | [ SettingValue ] | { String = SettingValue; }
 # τ ScalarSetting = {
-#     type :: "bool" | "float" | "int" | "list" | "string";
+#     type :: "bool" | "float" | "list" | "string";
 #     default :: SettingValue;
+#   }
+#
+# τ IntSetting = {
+#     type :: "int";
+#     default :: SettingValue;
+#     range? :: { min :: Int; max :: Int; };
 #   }
 #
 # τ ColorSetting = {
@@ -32,6 +38,7 @@
 #
 # τ Setting =
 #     ScalarSetting
+#   | IntSetting
 #   | ColorSetting
 #   | EnumSetting
 #   | AttrsSetting
@@ -56,7 +63,11 @@ let
 
   settingTypes = builtins.attrNames typePredicates;
 
-  isValidValue = setting: typePredicates.${setting.type} setting;
+  isWithinRange =
+    setting: value: !(setting ? range) || (value >= setting.range.min && value <= setting.range.max);
+
+  isValidValue =
+    setting: value: typePredicates.${setting.type} setting value && isWithinRange setting value;
 
   validate =
     settings:
@@ -86,6 +97,21 @@ let
           _: setting: setting ? encoding && !(setting.type == "color" && setting.encoding == "nsColor")
         ) settings
       );
+      settingsWithInvalidRanges = lib.attrNames (
+        lib.filterAttrs (
+          _: setting:
+          setting ? range
+          && !(
+            setting.type == "int"
+            && builtins.isAttrs setting.range
+            && setting.range ? min
+            && setting.range ? max
+            && builtins.isInt setting.range.min
+            && builtins.isInt setting.range.max
+            && setting.range.min <= setting.range.max
+          )
+        ) settings
+      );
       settingsWithInvalidDefaults = lib.attrNames (
         lib.filterAttrs (
           _: setting: setting.default != null && !(isValidValue setting setting.default)
@@ -111,6 +137,10 @@ let
     assert lib.assertMsg (settingsWithInvalidEncodings == [ ]) ''
       Orion settings catalog entries have invalid encodings:
       ${lib.concatStringsSep ", " settingsWithInvalidEncodings}
+    '';
+    assert lib.assertMsg (settingsWithInvalidRanges == [ ]) ''
+      Orion settings catalog entries have invalid numeric ranges:
+      ${lib.concatStringsSep ", " settingsWithInvalidRanges}
     '';
     assert lib.assertMsg (settingsWithInvalidDefaults == [ ]) ''
       Orion settings catalog defaults do not match their declared types:

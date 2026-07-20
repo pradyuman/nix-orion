@@ -77,6 +77,10 @@
   WindowBorderOpacity = {
     type = "int";
     default = null;
+    range = {
+      min = 0;
+      max = 100;
+    };
   };
   WindowBorderAnimationSpeed = {
     type = "enum";

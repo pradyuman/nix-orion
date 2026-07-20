@@ -78,6 +78,8 @@ let
       lib.types.enum setting.values
     else if setting.type == "attrs" && setting ? fields then
       attrsSettingOptionType setting.fields
+    else if setting.type == "int" && setting ? range then
+      lib.types.ints.between setting.range.min setting.range.max
     else
       settingOptionTypes.${setting.type};
 

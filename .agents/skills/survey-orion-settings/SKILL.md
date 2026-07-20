@@ -189,7 +189,9 @@ in `toolbar.nix`, and settings without a matching tab in `other.nix`:
   `string`. Use `color` for a value configured in `#RRGGBB` format. Add
   `encoding = "nsColor"` when Orion persists the color as archived `NSColor`
   data, and omit it otherwise. Use `enum` with a non-empty `values` list when
-  the setting accepts a finite set of raw values.
+  the setting accepts a finite set of raw values. Add
+  `range = { min = <value>; max = <value>; }` to an `int` when the persisted
+  value has inclusive bounds.
 
 - Use `default = <value>` for an established persisted factory default.
 
