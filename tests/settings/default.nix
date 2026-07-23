@@ -1,5 +1,5 @@
 { lib }:
 
 {
-  smoke = import ./smoke.nix { inherit lib; };
+  options = import ./options.nix { inherit lib; };
 }
