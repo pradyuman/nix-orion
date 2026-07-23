@@ -98,4 +98,70 @@ in
       "TB Display Mode" = 2;
     };
   };
+
+  # Malformed colors should fail validation.
+  testInvalidColor = {
+    expr =
+      (eval {
+        CustomAccentColor = "c7b299";
+      }).CustomAccentColor;
+
+    expectedError.type = "ThrownError";
+  };
+
+  # Values above the inclusive maximum should fail validation.
+  testRangeOverflow = {
+    expr =
+      (eval {
+        WindowBorderOpacity = 101;
+      }).WindowBorderOpacity;
+
+    expectedError.type = "ThrownError";
+  };
+
+  # Values outside an enum's allowed list should fail validation.
+  testInvalidEnum = {
+    expr =
+      (eval {
+        AppearanceStyle = "sepia";
+      }).AppearanceStyle;
+
+    expectedError.type = "ThrownError";
+  };
+
+  # Toolbar item identifiers matching the allowed patterns should pass validation.
+  testPatternedToolbarItems = {
+    expr =
+      (eval {
+        ToolbarConfiguration."TB Item Identifiers" = [
+          "customAction-550E8400-E29B-41D4-A716-446655440000"
+          "webExtButton-example"
+        ];
+      }).ToolbarConfiguration."TB Item Identifiers";
+
+    expected = [
+      "customAction-550E8400-E29B-41D4-A716-446655440000"
+      "webExtButton-example"
+    ];
+  };
+
+  # Custom action identifiers without a valid UUID should fail validation.
+  testInvalidCustomActionIdentifier = {
+    expr =
+      (eval {
+        ToolbarConfiguration."TB Item Identifiers" = [ "customAction-not-a-uuid" ];
+      }).ToolbarConfiguration."TB Item Identifiers";
+
+    expectedError.type = "ThrownError";
+  };
+
+  # Unknown item identifiers in cataloged toolbar fields should fail validation.
+  testInvalidNestedListElement = {
+    expr =
+      (eval {
+        ToolbarConfiguration."TB Item Identifiers" = [ "unknownItem" ];
+      }).ToolbarConfiguration."TB Item Identifiers";
+
+    expectedError.type = "ThrownError";
+  };
 }
