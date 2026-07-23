@@ -44,6 +44,19 @@
         default = pkgs.orion-browser;
       };
 
+      checks.${system}.settings =
+        pkgs.runCommand "settings-tests"
+          {
+            nativeBuildInputs = [ pkgs.nix-unit ];
+          }
+          ''
+            nix-unit \
+              --gc-roots-dir "$TMPDIR" \
+              --arg lib 'import ${nixpkgs}/lib' \
+              ${./.}/tests/settings
+            touch "$out"
+          '';
+
       devShells.${system}.survey = pkgs.mkShell {
         packages = with pkgs; [
           ghidra
