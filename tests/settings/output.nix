@@ -1,32 +1,8 @@
-{ homeManagerLib, pkgs }:
+{ evalHome, orionDomain }:
 
 let
-  orionModule = ../../modules/home-manager;
-  orionDomain = "com.kagi.kagimacOS";
-
-  # Evaluate nix-orion inside a real Home Manager configuration.
-  eval =
-    orion:
-    (homeManagerLib.homeManagerConfiguration {
-      inherit pkgs;
-      modules = [
-        orionModule
-        {
-          home = {
-            username = "test";
-            homeDirectory = "/Users/test";
-            stateVersion = "26.05";
-          };
-          programs.orion = {
-            enable = true;
-          }
-          // orion;
-        }
-      ];
-    }).config;
-
   preserve =
-    (eval {
+    (evalHome {
       omittedSettings = "preserve";
       settings = {
         ShowTitlesInTabs = false;
@@ -35,7 +11,7 @@ let
     }).targets.darwin.defaults.${orionDomain};
 
   reset =
-    (eval {
+    (evalHome {
       settings.ShowTitlesInTabs = false;
     }).targets.darwin.defaults.${orionDomain};
 in
