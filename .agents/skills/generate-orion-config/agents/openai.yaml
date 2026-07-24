@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Orion Config"
+  short_description: "Export Orion preferences to Home Manager"
+  default_prompt: "Use $generate-orion-config to create a reviewed Orion Home Manager configuration from my current preferences."
