@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>DefaultFontSize</key>
+  <integer>16</integer>
+  <key>HomePageURL</key>
+  <string>https://example.com/${profile}</string>
+  <key>ShowTitlesInTabs</key>
+  <false/>
+  <key>TabStyle</key>
+  <string>treeStyle</string>
+  <key>ToolbarConfiguration</key>
+  <dict>
+    <key>TB Default Item Identifiers</key>
+    <array><string>runtime-only</string></array>
+    <key>TB Display Mode</key>
+    <integer>2</integer>
+    <key>TB Item Identifiers</key>
+    <array>
+      <string>toggleSidebar</string>
+      <string>locationBar</string>
+    </array>
+  </dict>
+  <key>UncatalogedRuntimeState</key>
+  <string>must not appear</string>
+  <key>WindowBorderOpacity</key>
+  <integer>101</integer>
+</dict>
+</plist>

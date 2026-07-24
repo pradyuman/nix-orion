@@ -59,6 +59,22 @@ Nix flake for the [Orion browser](https://orionbrowser.com) by [Kagi](https://he
 
 You can declaratively specify your settings with `programs.orion.settings`.
 
+### Generate a configuration
+
+Export cataloged preferences from the current Orion installation:
+
+```sh
+nix run github:pradyuman/nix-orion#generate-config
+```
+
+The command prints a Home Manager module and does not change Orion. Pass
+`--output <path>` to write atomically or `--include-defaults` to include values
+equal to catalog defaults.
+
+The exporter excludes uncataloged state, profiles, extensions, tab groups,
+pinned tabs, history, and sessions. Keep browser data in Orion's native
+import/export flow.
+
 ### General settings
 
 ```nix
