@@ -3,6 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,6 +16,7 @@
   outputs =
     {
       nixpkgs,
+      home-manager,
       treefmt-nix,
       ...
     }:
@@ -52,7 +57,14 @@
           ''
             nix-unit \
               --gc-roots-dir "$TMPDIR" \
-              --arg lib 'import ${nixpkgs}/lib' \
+              --arg homeManagerLib 'import ${home-manager}/lib {
+                lib = import ${nixpkgs}/lib;
+              }' \
+              --arg pkgs 'import ${nixpkgs} {
+                system = "${system}";
+                config.allowUnfree = true;
+                overlays = [ (import ${./.}/overlay.nix) ];
+              }' \
               ${./.}/tests/settings
             touch "$out"
           '';
