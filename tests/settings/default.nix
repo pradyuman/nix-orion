@@ -15,4 +15,5 @@ in
   output = import ./output.nix {
     inherit (common) evalHome orionDomain;
   };
+  warnings = import ./warnings.nix { inherit (pkgs) lib; };
 }

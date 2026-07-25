@@ -56,7 +56,6 @@
           }
           ''
             nix-unit \
-              --gc-roots-dir "$TMPDIR" \
               --arg homeManagerLib 'import ${home-manager}/lib {
                 lib = import ${nixpkgs}/lib;
               }' \
