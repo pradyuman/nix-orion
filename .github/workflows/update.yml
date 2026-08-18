@@ -62,10 +62,18 @@ jobs:
         run: git diff --check
 
       - name: Commit update
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           version="$(plutil -extract darwin.aarch64.version raw -o - sources.json)"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add sources.json
-          git commit -m "update orion to $version"
-          git push origin "HEAD:$GITHUB_REF_NAME"
+          old_blob="$(git rev-parse HEAD:sources.json)"
+          content="$(base64 < sources.json | tr -d '\n')"
+
+          gh api \
+            --method PUT \
+            "/repos/$GITHUB_REPOSITORY/contents/sources.json" \
+            --field message="update orion to $version" \
+            --field content="$content" \
+            --field sha="$old_blob" \
+            --field branch="$GITHUB_REF_NAME" \
+            --jq '.commit.html_url'
