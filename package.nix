@@ -17,6 +17,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   strictDeps = true;
   __structuredAttrs = true;
+  dontPatchShebangs = true;
 
   unpackCmd = "unzip -q $curSrc -x '__MACOSX/*' '*:com.apple.*'";
 

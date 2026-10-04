@@ -40,7 +40,7 @@ jobs:
     name: Validate and commit update
     needs: check
     if: needs.check.outputs.update-available == 'true'
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 10
     permissions:
       contents: write # Commit the source update after validation.

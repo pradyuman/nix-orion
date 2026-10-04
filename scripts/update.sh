@@ -1,5 +1,6 @@
 #!/usr/bin/env nix
 #!nix shell --inputs-from .. nixpkgs#bash nixpkgs#curl nixpkgs#jq nixpkgs#libplist nixpkgs#_7zz nixpkgs#moreutils -c bash
+# shellcheck shell=bash
 
 set -euo pipefail
 
