@@ -1,9 +1,9 @@
 {
   "darwin": {
     "aarch64": {
-      "version": "152",
-      "url": "https://cdn.kagi.com/updates/26_0/152.zip",
-      "hash": "sha256-Y/b2QMQ/4vhXtqxGF4VRjezUdTdfzfH/1HDDdYYjuDA="
+      "version": "153",
+      "url": "https://cdn.kagi.com/updates/26_0/153.zip",
+      "hash": "sha256-rhV1eHzZ0bsfsenABp5gGq2Sriua3AKo4d7p591qiM4="
     }
   }
 }
